@@ -7,7 +7,7 @@ test("parsePermissions marks missing permissions as implicit", () => {
 });
 
 test("parsePermissions sorts explicit scopes", () => {
-  assert.deepEqual(parsePermissions({ id-token: "write", contents: "read" }), {
+  assert.deepEqual(parsePermissions({ "id-token": "write", contents: "read" }), {
     mode: "explicit",
     scopes: { contents: "read", "id-token": "write" }
   });
