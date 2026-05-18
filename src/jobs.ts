@@ -1,8 +1,8 @@
-import type { WorkflowDocument, WorkflowJob } from "./types.js";
+import type { WorkflowJob } from "./types.js";
 import { extractCommands } from "./commands.js";
 import { parsePermissions } from "./permissions.js";
 import { collectSecretReferences } from "./secrets.js";
-import { isRecord, scalarToString } from "./yaml.js";
+import { isRecord, scalarToString, type WorkflowDocument } from "./yaml.js";
 
 export function parseJobs(data: WorkflowDocument): WorkflowJob[] {
   if (!isRecord(data.jobs)) {

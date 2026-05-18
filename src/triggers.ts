@@ -1,5 +1,5 @@
-import type { WorkflowDocument, WorkflowTrigger } from "./types.js";
-import { isRecord } from "./yaml.js";
+import type { WorkflowTrigger } from "./types.js";
+import { isRecord, type WorkflowDocument } from "./yaml.js";
 
 export function parseTriggers(data: WorkflowDocument): WorkflowTrigger[] {
   const raw = data.on;
