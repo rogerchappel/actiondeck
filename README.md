@@ -17,12 +17,20 @@ pnpm install
 
 ## Use
 
-Replace this section with the smallest useful example for the generated
-repository.
+Scan the included sample repository and render a Markdown review:
 
 ```sh
-pnpm dev
+npm run build
+node dist/src/cli.js scan fixtures/sample-repo --format markdown
 ```
+
+Explain one workflow file:
+
+```sh
+node dist/src/cli.js explain fixtures/sample-repo/.github/workflows/release.yml
+```
+
+See [docs/tutorials/review-sample-workflows.md](docs/tutorials/review-sample-workflows.md) for a fixture-backed walkthrough and [docs/promo/demo-brief.md](docs/promo/demo-brief.md) for grounded video notes.
 
 ## Verify
 
