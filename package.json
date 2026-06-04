@@ -13,7 +13,8 @@
   "files": [
     "dist",
     "fixtures",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -40,5 +41,13 @@
   "devDependencies": {
     "@types/node": "^22.10.1",
     "typescript": "^5.7.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rogerchappel/actiondeck"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/actiondeck/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/actiondeck#readme"
 }
