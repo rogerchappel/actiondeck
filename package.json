@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Local-first GitHub Actions workflow reviewer.",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/src/index.js",
   "bin": {
-    "actiondeck": "./dist/cli.js"
+    "actiondeck": "./dist/src/cli.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/src/index.js"
   },
   "files": [
     "dist",
@@ -20,7 +20,7 @@
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test dist/**/*.test.js",
-    "smoke": "npm run build && node dist/cli.js scan fixtures/sample-repo --format markdown && node dist/cli.js scan fixtures/sample-repo --format json --output /tmp/actiondeck-smoke.json && node dist/cli.js explain fixtures/sample-repo/.github/workflows/release.yml",
+    "smoke": "npm run build && node dist/src/cli.js scan fixtures/sample-repo --format markdown && node dist/src/cli.js scan fixtures/sample-repo --format json --output /tmp/actiondeck-smoke.json && node dist/src/cli.js explain fixtures/sample-repo/.github/workflows/release.yml",
     "package:smoke": "npm pack --dry-run",
     "release:check": "npm test && npm run smoke && npm run package:smoke"
   },
