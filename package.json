@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/src/index.js",
   "bin": {
-    "actiondeck": "./dist/src/cli.js"
+    "actiondeck": "dist/src/cli.js"
   },
   "exports": {
     ".": "./dist/src/index.js"
@@ -14,7 +14,8 @@
     "dist",
     "fixtures",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "SECURITY.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
