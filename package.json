@@ -26,7 +26,8 @@
     "test": "npm run build && node --test dist/**/*.test.js",
     "smoke": "npm run build && node dist/src/cli.js scan fixtures/sample-repo --format markdown && node dist/src/cli.js scan fixtures/sample-repo --format json --output /tmp/actiondeck-smoke.json && node dist/src/cli.js explain fixtures/sample-repo/.github/workflows/release.yml",
     "package:smoke": "npm pack --dry-run",
-    "release:check": "npm test && npm run smoke && npm run package:smoke"
+    "release:check": "npm test && npm run smoke && npm run package:smoke",
+    "prepack": "npm run build"
   },
   "keywords": [
     "github-actions",
