@@ -80,9 +80,27 @@ function reviewJobs(workflow: Omit<WorkflowSummary, "reviewItems">): ReviewItem[
         message: `job ${job.id} grants contents: write.`
       });
     }
+
+    for (const actionRef of job.uses) {
+      if (isFloatingActionRef(actionRef)) {
+        items.push({
+          code: "floating-action-ref",
+          severity: "warning",
+          workflowPath: workflow.path,
+          jobId: job.id,
+          message: `job ${job.id} uses ${actionRef} without a pinned ref.`
+        });
+      }
+    }
   }
 
   return items;
+}
+
+function isFloatingActionRef(actionRef: string): boolean {
+  if (actionRef.startsWith("./") || actionRef.startsWith("../")) return false;
+  const version = actionRef.split("@")[1];
+  return !version || /^v?\d+$/.test(version) || /^(main|master|trunk|latest)$/i.test(version);
 }
 
 function hasTrigger(triggers: WorkflowTrigger[], name: string): boolean {
