@@ -10,5 +10,6 @@ test("scanWorkflows summarizes fixture workflows", async () => {
   assert.equal(report.workflowCount, 2);
   assert.deepEqual(report.workflows.map((workflow) => workflow.name), ["CI", "Release"]);
   assert.ok(report.reviewItems.some((item) => item.code === "broad-contents-write"));
+  assert.ok(report.reviewPlan.some((step) => step.action === "approve"));
   assert.ok(report.workflows[1]?.secrets.some((secret) => secret.name === "NPM_TOKEN"));
 });
