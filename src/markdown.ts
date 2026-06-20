@@ -16,6 +16,16 @@ export function renderMarkdown(report: ActionDeckReport): string {
     lines.push(...renderWorkflowMarkdown(workflow), "");
   }
 
+  lines.push("## Review Plan", "");
+  if (report.reviewPlan.length === 0) {
+    lines.push("- No release review gates required.");
+  } else {
+    for (const step of report.reviewPlan) {
+      lines.push(`- **${step.action.toUpperCase()}** ${step.title}: ${step.reason} (${step.itemCodes.join(", ")})`);
+    }
+  }
+  lines.push("");
+
   lines.push("## Review Items", "");
   if (report.reviewItems.length === 0) {
     lines.push("- No review items found.");

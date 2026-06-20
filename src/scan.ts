@@ -3,6 +3,7 @@ import { discoverWorkflowFiles } from "./discover.js";
 import { parseJobs } from "./jobs.js";
 import { displayPath } from "./path.js";
 import { parsePermissions } from "./permissions.js";
+import { buildReviewPlan } from "./review-plan.js";
 import { reviewWorkflow } from "./risks.js";
 import { dedupeSecretReferences } from "./secrets.js";
 import { parseTriggers } from "./triggers.js";
@@ -24,7 +25,8 @@ export async function scanWorkflows(root: string, options: ScanOptions = {}): Pr
     root: absoluteRoot,
     workflowCount: workflows.length,
     workflows,
-    reviewItems
+    reviewItems,
+    reviewPlan: buildReviewPlan(reviewItems)
   };
 }
 

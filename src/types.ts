@@ -43,6 +43,14 @@ export interface ReviewItem {
   jobId?: string;
 }
 
+export interface ReviewPlanStep {
+  id: string;
+  action: "block" | "approve" | "document";
+  title: string;
+  reason: string;
+  itemCodes: string[];
+}
+
 export interface WorkflowSummary {
   path: string;
   name: string;
@@ -60,4 +68,5 @@ export interface ActionDeckReport {
   workflowCount: number;
   workflows: WorkflowSummary[];
   reviewItems: ReviewItem[];
+  reviewPlan: ReviewPlanStep[];
 }

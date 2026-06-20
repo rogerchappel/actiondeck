@@ -18,7 +18,8 @@ const report: ActionDeckReport = {
     commands: [],
     reviewItems: []
   }],
-  reviewItems: []
+  reviewItems: [],
+  reviewPlan: []
 };
 
 test("renderJson returns pretty JSON", () => {
@@ -30,4 +31,5 @@ test("renderMarkdown includes workflow path and trigger", () => {
   assert.match(markdown, /ActionDeck Report/);
   assert.match(markdown, /\.github\/workflows\/ci\.yml/);
   assert.match(markdown, /push/);
+  assert.match(markdown, /Review Plan/);
 });
