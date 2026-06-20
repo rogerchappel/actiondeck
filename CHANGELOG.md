@@ -10,6 +10,8 @@ format and uses semantic versioning when versioned releases are published.
 ### Added
 
 - Initial project setup.
+- Review plans that group workflow findings into blocker, approval, and documentation gates.
+- Agent skill guidance for local workflow review and approval boundaries.
 
 ## Release Links
 
