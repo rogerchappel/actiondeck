@@ -6,6 +6,8 @@ Scan GitHub repositories for CI/CD actions, surface permission risks, and render
 
 `actiondeck` scans `.github/workflows` directories for GitHub Actions usage, identifies permission escalations (`pull-requests: write`, `contents: write`, etc.), and produces structured audit reports in markdown or JSON.
 
+Reports include a review plan that groups findings into release blockers, maintainer approvals, and informational documentation steps.
+
 ## Install
 
 ```sh
@@ -46,6 +48,10 @@ npm run release:check   # Full release gate
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Agent skill
+
+See [`docs/SKILL.md`](docs/SKILL.md) for when agents should use ActionDeck, side-effect boundaries, and validation steps.
 
 ## Security
 
