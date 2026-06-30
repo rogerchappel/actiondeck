@@ -5,7 +5,9 @@ const APPROVAL_CODES = new Set(["broad-contents-write", "job-contents-write", "r
 
 export function buildReviewPlan(items: ReviewItem[]): ReviewPlanStep[] {
   const steps: ReviewPlanStep[] = [];
-  const blocking = itemCodes(items.filter((item) => item.severity === "high" || BLOCKING_CODES.has(item.code)));
+  const blockingItems = items.filter((item) => item.severity === "high" || BLOCKING_CODES.has(item.code));
+  const blockingCodes = new Set(blockingItems.map((item) => item.code));
+  const blocking = itemCodes(blockingItems);
   if (blocking.length > 0) {
     steps.push({
       id: "release-blockers",
@@ -16,7 +18,7 @@ export function buildReviewPlan(items: ReviewItem[]): ReviewPlanStep[] {
     });
   }
 
-  const approvals = itemCodes(items.filter((item) => item.severity === "warning" || APPROVAL_CODES.has(item.code)));
+  const approvals = itemCodes(items.filter((item) => !blockingCodes.has(item.code) && (item.severity === "warning" || APPROVAL_CODES.has(item.code))));
   if (approvals.length > 0) {
     steps.push({
       id: "maintainer-approval",
