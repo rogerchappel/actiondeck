@@ -34,6 +34,18 @@ Explain a specific workflow:
 actiondeck explain /path/to/repo/.github/workflows/release.yml
 ```
 
+## Local demo
+
+Run the fixture-backed demo to generate a Markdown report, a JSON report, and a
+single-workflow explanation without contacting GitHub:
+
+```sh
+bash demo/run-risk-scan.sh
+```
+
+The walkthrough is documented in
+[docs/promo/risk-scan-demo.md](docs/promo/risk-scan-demo.md).
+
 ## Verify
 
 ```sh
