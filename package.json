@@ -23,6 +23,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test dist/**/*.test.js",
     "smoke": "npm run build && node dist/src/cli.js scan fixtures/sample-repo --format markdown && node dist/src/cli.js scan fixtures/sample-repo --format json --output /tmp/actiondeck-smoke.json && node dist/src/cli.js explain fixtures/sample-repo/.github/workflows/release.yml",
     "package:smoke": "node scripts/package-smoke.mjs",
