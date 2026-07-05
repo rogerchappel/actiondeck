@@ -78,6 +78,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 See [`docs/SKILL.md`](docs/SKILL.md) for when agents should use ActionDeck, side-effect boundaries, and validation steps.
 
+## Limitations
+
+- ActionDeck inspects workflow files and local repository contents; it does not
+  query GitHub branch protection, organization policy, repository secrets, or
+  runtime token permissions.
+- Findings are static review signals, not proof that a workflow is safe or
+  exploitable. Confirm high-risk changes against live repository settings before
+  making policy decisions.
+- The scanner focuses on GitHub Actions YAML. Composite actions, reusable
+  workflows, shell scripts, and third-party action behavior may need separate
+  review.
+
 ## Security
 
 See [SECURITY.md](SECURITY.md).
