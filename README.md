@@ -11,12 +11,19 @@ Reports include a review plan that groups findings into release blockers, mainta
 ## Install
 
 ```sh
-npm install -g @rogerchappel/actiondeck
+npm install -g actiondeck
 # or
 cd actiondeck && npm install && npm run build
 ```
 
 ## Use
+
+Confirm the CLI entrypoint before scanning a repository:
+
+```sh
+actiondeck --help
+actiondeck --version
+```
 
 Scan a repository:
 
