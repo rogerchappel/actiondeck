@@ -34,6 +34,16 @@ Explain a specific workflow:
 actiondeck explain /path/to/repo/.github/workflows/release.yml
 ```
 
+Run the checked-in fixture demo:
+
+```sh
+bash demo/run-workflow-risk-demo.sh
+```
+
+See [docs/tutorials/pr-target-risk-demo.md](docs/tutorials/pr-target-risk-demo.md)
+for the walkthrough and [docs/promo/social-hooks.md](docs/promo/social-hooks.md)
+for grounded launch copy.
+
 ## Verify
 
 ```sh
