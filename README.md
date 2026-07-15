@@ -6,15 +6,24 @@ Scan GitHub repositories for CI/CD actions, surface permission risks, and render
 
 `actiondeck` scans `.github/workflows` directories for GitHub Actions usage, identifies permission escalations (`pull-requests: write`, `contents: write`, etc.), and produces structured audit reports in markdown or JSON.
 
+Reports include a review plan that groups findings into release blockers, maintainer approvals, and informational documentation steps.
+
 ## Install
 
 ```sh
-npm install -g @rogerchappel/actiondeck
+npm install -g actiondeck
 # or
 cd actiondeck && npm install && npm run build
 ```
 
 ## Use
+
+Confirm the CLI entrypoint before scanning a repository:
+
+```sh
+actiondeck --help
+actiondeck --version
+```
 
 Scan a repository:
 
@@ -44,6 +53,18 @@ See [docs/tutorials/pr-target-risk-demo.md](docs/tutorials/pr-target-risk-demo.m
 for the walkthrough and [docs/promo/social-hooks.md](docs/promo/social-hooks.md)
 for grounded launch copy.
 
+## Local demo
+
+Run the fixture-backed demo to generate a Markdown report, a JSON report, and a
+single-workflow explanation without contacting GitHub:
+
+```sh
+bash demo/run-risk-scan.sh
+```
+
+The walkthrough is documented in
+[docs/promo/risk-scan-demo.md](docs/promo/risk-scan-demo.md).
+
 ## Verify
 
 ```sh
@@ -53,9 +74,38 @@ npm run smoke          # Scan fixture repo
 npm run release:check   # Full release gate
 ```
 
+
+## Verification
+
+Run the local quality gates before opening a pull request:
+
+```sh
+npm run lint
+npm test
+npm run smoke
+```
+
+`npm run lint` is an alias for the repository static check so contributors can use the common npm workflow without guessing the project-specific command.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Agent skill
+
+See [`docs/SKILL.md`](docs/SKILL.md) for when agents should use ActionDeck, side-effect boundaries, and validation steps.
+
+## Limitations
+
+- ActionDeck inspects workflow files and local repository contents; it does not
+  query GitHub branch protection, organization policy, repository secrets, or
+  runtime token permissions.
+- Findings are static review signals, not proof that a workflow is safe or
+  exploitable. Confirm high-risk changes against live repository settings before
+  making policy decisions.
+- The scanner focuses on GitHub Actions YAML. Composite actions, reusable
+  workflows, shell scripts, and third-party action behavior may need separate
+  review.
 
 ## Security
 
