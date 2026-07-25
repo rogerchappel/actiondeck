@@ -10,10 +10,32 @@ Reports include a review plan that groups findings into release blockers, mainta
 
 ## Install
 
+ActionDeck is distributed as a package tarball attached to each
+[GitHub release](https://github.com/rogerchappel/actiondeck/releases), not through the npm registry.
+There is no release available yet; until the first release is published, use
+the source installation below.
+
+Once a release exists, replace the version if needed, download its versioned
+asset, and install it globally:
+
 ```sh
-npm install -g actiondeck
-# or
-cd actiondeck && npm install && npm run build
+VERSION=0.1.0
+curl -fLO "https://github.com/rogerchappel/actiondeck/releases/download/v${VERSION}/actiondeck-${VERSION}.tgz"
+npm install --global "./actiondeck-${VERSION}.tgz"
+```
+
+To install the same downloaded asset into the current project instead:
+
+```sh
+npm install "./actiondeck-${VERSION}.tgz"
+```
+
+To run from a source checkout before a release exists:
+
+```sh
+npm install
+npm run build
+npm link
 ```
 
 ## Use
