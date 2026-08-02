@@ -2,10 +2,22 @@
 
 import { readFile } from "node:fs/promises";
 
-const [packageJsonText, readme, workflow] = await Promise.all([
+const contractInputs = [
+  "README.md",
+  "package.json",
+  "scripts/release-contract.mjs",
+  ".github/workflows/ci.yml",
+  ".github/workflows/release.yml",
+  ".github/workflows/release-dry-run.yml",
+];
+
+const [packageJsonText, readme, releaseWorkflow, ciWorkflow, dryRunWorkflow] =
+  await Promise.all([
   readFile("package.json", "utf8"),
   readFile("README.md", "utf8"),
   readFile(".github/workflows/release.yml", "utf8"),
+  readFile(".github/workflows/ci.yml", "utf8"),
+  readFile(".github/workflows/release-dry-run.yml", "utf8"),
 ]);
 
 const packageJson = JSON.parse(packageJsonText);
@@ -40,8 +52,22 @@ for (const text of requiredReadmeText) {
 }
 
 for (const text of requiredWorkflowText) {
-  if (!workflow.includes(text)) {
+  if (!releaseWorkflow.includes(text)) {
     errors.push(`release workflow must contain: ${text}`);
+  }
+}
+
+if (!ciWorkflow.includes("run: npm run release:check")) {
+  errors.push("CI must execute the package release gate: npm run release:check");
+}
+
+if (/^\s+paths(?:-ignore)?:/m.test(ciWorkflow)) {
+  errors.push("CI pull requests must not filter paths used by the release contract");
+}
+
+for (const input of contractInputs) {
+  if (!dryRunWorkflow.includes(`- ${input}`)) {
+    errors.push(`release dry run paths must include contract input: ${input}`);
   }
 }
 

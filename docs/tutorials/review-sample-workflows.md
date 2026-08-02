@@ -44,6 +44,5 @@ The release fixture highlights these review items:
 4. Run the `explain` command.
 5. Match each review item back to a line in the fixture.
 
-## Known local note
-
-The current package metadata references `dist/cli.js`, while the TypeScript build emits `dist/src/cli.js`. Use the built path above for this source-tree demo.
+The package metadata and TypeScript build both expose the CLI at
+`dist/src/cli.js`, so the commands above match an installed package.

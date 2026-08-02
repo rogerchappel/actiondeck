@@ -4,10 +4,14 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - README.md
       - releasebox.config.json
       - package.json
       - package-lock.json
-      - .github/workflows/release*.yml
+      - scripts/release-contract.mjs
+      - .github/workflows/ci.yml
+      - .github/workflows/release.yml
+      - .github/workflows/release-dry-run.yml
 
 permissions:
   contents: read
