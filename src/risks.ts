@@ -61,7 +61,7 @@ function reviewJobs(workflow: Omit<WorkflowSummary, "reviewItems">): ReviewItem[
       });
     }
 
-    if (isReleaseJob(job.id, job.name) && !hasTagGuard(job.if)) {
+    if (isReleaseJob(job.id, job.name) && !hasTagGuard(job.if) && !isTagOnlyWorkflow(workflow.triggers)) {
       items.push({
         code: "release-without-tag-guard",
         severity: "warning",
@@ -113,6 +113,17 @@ function isReleaseJob(id: string, name?: string): boolean {
 
 function hasTagGuard(condition?: string): boolean {
   return Boolean(condition && /refs\/tags|github\.ref_type\s*==\s*['"]tag['"]/.test(condition));
+}
+
+function isTagOnlyWorkflow(triggers: WorkflowTrigger[]): boolean {
+  return triggers.length > 0 && triggers.every((trigger) => {
+    if (trigger.name !== "push" || !isRecord(trigger.detail)) return false;
+    return "tags" in trigger.detail || "tags-ignore" in trigger.detail;
+  });
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function compareReviewItems(a: ReviewItem, b: ReviewItem): number {
