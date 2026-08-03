@@ -50,3 +50,61 @@ test("reviewWorkflow flags floating action refs", () => {
     ["job test uses actions/checkout@v6 without a pinned ref."]
   );
 });
+
+test("reviewWorkflow accepts an unguarded release job in a tag-only push workflow", () => {
+  const items = reviewWorkflow(releaseWorkflow([
+    { name: "push", detail: { tags: ["v*.*.*"] } }
+  ]));
+
+  assert.equal(items.some((item) => item.code === "release-without-tag-guard"), false);
+});
+
+test("reviewWorkflow flags an unguarded release job when manual dispatch is also available", () => {
+  const items = reviewWorkflow(releaseWorkflow([
+    { name: "push", detail: { tags: ["v*.*.*"] } },
+    { name: "workflow_dispatch", detail: true }
+  ]));
+
+  assert.equal(items.some((item) => item.code === "release-without-tag-guard"), true);
+});
+
+test("reviewWorkflow flags an unguarded release job for branch pushes", () => {
+  const items = reviewWorkflow(releaseWorkflow([
+    { name: "push", detail: { branches: ["main"] } }
+  ]));
+
+  assert.equal(items.some((item) => item.code === "release-without-tag-guard"), true);
+});
+
+test("reviewWorkflow accepts a guarded release job in a broadly triggered workflow", () => {
+  const items = reviewWorkflow(releaseWorkflow(
+    [{ name: "workflow_dispatch", detail: true }],
+    "github.ref_type == 'tag'"
+  ));
+
+  assert.equal(items.some((item) => item.code === "release-without-tag-guard"), false);
+});
+
+function releaseWorkflow(
+  triggers: WorkflowSummary["triggers"],
+  condition?: string
+): Omit<WorkflowSummary, "reviewItems"> {
+  return {
+    path: ".github/workflows/release.yml",
+    name: "Release",
+    triggers,
+    permissions: { mode: "explicit", scopes: { contents: "read" } },
+    jobs: [{
+      id: "release",
+      runsOn: ["ubuntu-latest"],
+      needs: [],
+      permissions: { mode: "inherit", scopes: {} },
+      secrets: [],
+      commands: [],
+      uses: [],
+      if: condition
+    }],
+    secrets: [],
+    commands: []
+  };
+}

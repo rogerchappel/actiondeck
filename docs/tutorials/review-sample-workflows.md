@@ -33,7 +33,7 @@ The release fixture highlights these review items:
 
 - `broad-contents-write` because the workflow grants `contents: write` at the top level
 - `job-contents-write` because the `publish` job grants `contents: write`
-- `release-without-tag-guard` because the release-like `publish` job does not have an obvious tag guard
+- `release-without-tag-guard` because the release-like `publish` job is reachable from a non-tag trigger and does not have an obvious job-level tag guard. A workflow triggered exclusively by tag pushes does not need to repeat that guard on the job.
 - `root-job` because the `build` job has no dependencies in a multi-job workflow
 
 ## Demo checklist
