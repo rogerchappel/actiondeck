@@ -53,6 +53,11 @@ Scan a repository:
 actiondeck scan /path/to/repo --format markdown
 ```
 
+The repository root must exist and be a directory. Invalid roots exit nonzero
+with an error that identifies the path. An existing repository without a
+`.github/workflows` directory is valid and produces an empty report with a
+workflow count of zero.
+
 Output to file:
 
 ```sh
