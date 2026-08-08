@@ -118,7 +118,9 @@ function hasTagGuard(condition?: string): boolean {
 function isTagOnlyWorkflow(triggers: WorkflowTrigger[]): boolean {
   return triggers.length > 0 && triggers.every((trigger) => {
     if (trigger.name !== "push" || !isRecord(trigger.detail)) return false;
-    return "tags" in trigger.detail || "tags-ignore" in trigger.detail;
+    return "tags" in trigger.detail &&
+      !("branches" in trigger.detail) &&
+      !("branches-ignore" in trigger.detail);
   });
 }
 
