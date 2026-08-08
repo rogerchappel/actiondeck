@@ -76,6 +76,22 @@ test("reviewWorkflow flags an unguarded release job for branch pushes", () => {
   assert.equal(items.some((item) => item.code === "release-without-tag-guard"), true);
 });
 
+test("reviewWorkflow flags an unguarded release job when tags-ignore still permits branch pushes", () => {
+  const items = reviewWorkflow(releaseWorkflow([
+    { name: "push", detail: { "tags-ignore": ["beta-*"] } }
+  ]));
+
+  assert.equal(items.some((item) => item.code === "release-without-tag-guard"), true);
+});
+
+test("reviewWorkflow flags an unguarded release job when tag and branch filters coexist", () => {
+  const items = reviewWorkflow(releaseWorkflow([
+    { name: "push", detail: { tags: ["v*.*.*"], branches: ["main"] } }
+  ]));
+
+  assert.equal(items.some((item) => item.code === "release-without-tag-guard"), true);
+});
+
 test("reviewWorkflow accepts a guarded release job in a broadly triggered workflow", () => {
   const items = reviewWorkflow(releaseWorkflow(
     [{ name: "workflow_dispatch", detail: true }],
