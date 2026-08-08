@@ -1,4 +1,5 @@
 import path from "node:path";
+import { stat } from "node:fs/promises";
 import { discoverWorkflowFiles } from "./discover.js";
 import { parseJobs } from "./jobs.js";
 import { displayPath } from "./path.js";
@@ -16,6 +17,7 @@ export interface ScanOptions {
 
 export async function scanWorkflows(root: string, options: ScanOptions = {}): Promise<ActionDeckReport> {
   const absoluteRoot = path.resolve(root);
+  await validateRepositoryRoot(absoluteRoot);
   const workflowFiles = await discoverWorkflowFiles(absoluteRoot);
   const workflows = await Promise.all(workflowFiles.map((filePath) => summarizeWorkflow(absoluteRoot, filePath)));
   const reviewItems = workflows.flatMap((workflow) => workflow.reviewItems);
@@ -28,6 +30,23 @@ export async function scanWorkflows(root: string, options: ScanOptions = {}): Pr
     reviewItems,
     reviewPlan: buildReviewPlan(reviewItems)
   };
+}
+
+async function validateRepositoryRoot(root: string): Promise<void> {
+  let rootStat;
+
+  try {
+    rootStat = await stat(root);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      throw new Error(`Repository root does not exist: ${root}`);
+    }
+    throw error;
+  }
+
+  if (!rootStat.isDirectory()) {
+    throw new Error(`Repository root is not a directory: ${root}`);
+  }
 }
 
 export async function summarizeWorkflow(root: string, filePath: string): Promise<WorkflowSummary> {
