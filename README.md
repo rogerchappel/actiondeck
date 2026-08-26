@@ -8,6 +8,11 @@ Scan GitHub repositories for CI/CD actions, surface permission risks, and render
 
 Reports include a review plan that groups findings into release blockers, maintainer approvals, and informational documentation steps.
 
+Action reference checks apply GitHub `owner/repository@ref` pinning rules to
+GitHub actions. Local `./` and `../` actions and `docker://image:tag` container
+actions retain their native reference syntax and are not reported as floating
+GitHub action refs.
+
 ## Install
 
 ActionDeck is distributed as a package tarball attached to each
