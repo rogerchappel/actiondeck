@@ -98,7 +98,11 @@ function reviewJobs(workflow: Omit<WorkflowSummary, "reviewItems">): ReviewItem[
 }
 
 function isFloatingActionRef(actionRef: string): boolean {
-  if (actionRef.startsWith("./") || actionRef.startsWith("../")) return false;
+  if (
+    actionRef.startsWith("./") ||
+    actionRef.startsWith("../") ||
+    actionRef.startsWith("docker://")
+  ) return false;
   const version = actionRef.split("@")[1];
   return !version || /^v?\d+$/.test(version) || /^(main|master|trunk|latest)$/i.test(version);
 }

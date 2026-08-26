@@ -39,7 +39,12 @@ test("reviewWorkflow flags floating action refs", () => {
       permissions: { mode: "inherit", scopes: {} },
       secrets: [],
       commands: [],
-      uses: ["actions/checkout@v6", "actions/setup-node@v6.0.0", "./.github/actions/local"]
+      uses: [
+        "actions/checkout@v6",
+        "actions/setup-node@v6.0.0",
+        "docker://alpine:3.20",
+        "./.github/actions/local"
+      ]
     }],
     secrets: [],
     commands: []
