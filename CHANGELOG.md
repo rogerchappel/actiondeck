@@ -13,6 +13,11 @@ format and uses semantic versioning when versioned releases are published.
 - Review plans that group workflow findings into blocker, approval, and documentation gates.
 - Agent skill guidance for local workflow review and approval boundaries.
 
+### Changed
+
+- Require full commit SHAs for remote action and reusable-workflow references,
+  while excluding local actions and Docker references from the pinning check.
+
 ## Release Links
 
 - Unreleased:
