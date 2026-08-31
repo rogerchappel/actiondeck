@@ -33,3 +33,22 @@ test("renderMarkdown includes workflow path and trigger", () => {
   assert.match(markdown, /push/);
   assert.match(markdown, /Review Plan/);
 });
+
+test("renderers preserve actionable floating reference text", () => {
+  const reference = "actions/setup-node@v6.0.0";
+  const item = {
+    code: "floating-action-ref" as const,
+    severity: "warning" as const,
+    workflowPath: ".github/workflows/ci.yml",
+    jobId: "test",
+    message: `job test uses ${reference} without an immutable commit SHA.`
+  };
+  const reportWithFinding: ActionDeckReport = {
+    ...report,
+    workflows: [{ ...report.workflows[0]!, reviewItems: [item] }],
+    reviewItems: [item]
+  };
+
+  assert.match(renderMarkdown(reportWithFinding), /actions\/setup-node@v6\.0\.0/);
+  assert.match(renderJson(reportWithFinding), /actions\/setup-node@v6\.0\.0/);
+});

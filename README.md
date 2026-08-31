@@ -8,10 +8,14 @@ Scan GitHub repositories for CI/CD actions, surface permission risks, and render
 
 Reports include a review plan that groups findings into release blockers, maintainer approvals, and informational documentation steps.
 
-Action reference checks apply GitHub `owner/repository@ref` pinning rules to
-GitHub actions. Local `./` and `../` actions and `docker://image:tag` container
-actions retain their native reference syntax and are not reported as floating
-GitHub action refs.
+### Action reference policy
+
+ActionDeck treats remote action and reusable-workflow references as pinned only
+when the value after `@` is a full 40-character commit SHA. Tags such as `@v6`
+and `@v6.0.0`, branch names such as `@main` or `@stable`, abbreviated SHAs,
+and missing refs produce a `floating-action-ref` finding that retains the exact
+reference in Markdown and JSON reports. Local `./` and `../` actions and
+`docker://` references are outside this check.
 
 ## Install
 
@@ -136,8 +140,9 @@ See [`docs/SKILL.md`](docs/SKILL.md) for when agents should use ActionDeck, side
   exploitable. Confirm high-risk changes against live repository settings before
   making policy decisions.
 - The scanner focuses on GitHub Actions YAML. Composite actions, reusable
-  workflows, shell scripts, and third-party action behavior may need separate
-  review.
+  workflow internals, shell scripts, and third-party action behavior may need
+  separate review. References used to invoke reusable workflows are still
+  checked for immutable commit-SHA pinning.
 
 ## Security
 

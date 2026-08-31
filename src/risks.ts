@@ -88,7 +88,7 @@ function reviewJobs(workflow: Omit<WorkflowSummary, "reviewItems">): ReviewItem[
           severity: "warning",
           workflowPath: workflow.path,
           jobId: job.id,
-          message: `job ${job.id} uses ${actionRef} without a pinned ref.`
+          message: `job ${job.id} uses ${actionRef} without an immutable commit SHA.`
         });
       }
     }
@@ -103,8 +103,10 @@ function isFloatingActionRef(actionRef: string): boolean {
     actionRef.startsWith("../") ||
     actionRef.startsWith("docker://")
   ) return false;
-  const version = actionRef.split("@")[1];
-  return !version || /^v?\d+$/.test(version) || /^(main|master|trunk|latest)$/i.test(version);
+
+  const separator = actionRef.lastIndexOf("@");
+  const reference = separator === -1 ? "" : actionRef.slice(separator + 1);
+  return !/^[0-9a-f]{40}$/i.test(reference);
 }
 
 function hasTrigger(triggers: WorkflowTrigger[], name: string): boolean {
