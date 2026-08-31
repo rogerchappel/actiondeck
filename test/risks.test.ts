@@ -26,7 +26,8 @@ test("reviewWorkflow flags pull_request_target and implicit permissions", () => 
   assert.ok(items.some((item) => item.code === "missing-workflow-permissions"));
 });
 
-test("reviewWorkflow flags floating action refs", () => {
+test("reviewWorkflow requires immutable action and reusable-workflow refs", () => {
+  const pinnedSha = "0123456789abcdef0123456789abcdef01234567";
   const items = reviewWorkflow({
     path: ".github/workflows/ci.yml",
     name: "CI",
@@ -42,9 +43,20 @@ test("reviewWorkflow flags floating action refs", () => {
       uses: [
         "actions/checkout@v6",
         "actions/setup-node@v6.0.0",
+        "owner/action@feature-branch",
+        `owner/action@${pinnedSha}`,
         "docker://alpine:3.20",
-        "./.github/actions/local"
+        "./.github/actions/local",
+        "../shared/action"
       ]
+    }, {
+      id: "reuse",
+      runsOn: [],
+      needs: [],
+      permissions: { mode: "inherit", scopes: {} },
+      secrets: [],
+      commands: [],
+      uses: ["owner/repository/.github/workflows/release.yml@stable"]
     }],
     secrets: [],
     commands: []
@@ -52,7 +64,12 @@ test("reviewWorkflow flags floating action refs", () => {
 
   assert.deepEqual(
     items.filter((item) => item.code === "floating-action-ref").map((item) => item.message),
-    ["job test uses actions/checkout@v6 without a pinned ref."]
+    [
+      "job reuse uses owner/repository/.github/workflows/release.yml@stable without an immutable commit SHA.",
+      "job test uses actions/checkout@v6 without an immutable commit SHA.",
+      "job test uses actions/setup-node@v6.0.0 without an immutable commit SHA.",
+      "job test uses owner/action@feature-branch without an immutable commit SHA."
+    ]
   );
 });
 
