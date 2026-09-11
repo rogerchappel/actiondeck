@@ -17,6 +17,15 @@ and missing refs produce a `floating-action-ref` finding that retains the exact
 reference in Markdown and JSON reports. Local `./` and `../` actions and
 `docker://` references are outside this check.
 
+### Permission escalation policy
+
+Explicit `contents: write`, `pull-requests: write`, or `permissions: write-all`
+grants raise warning findings at both workflow and job scope:
+`broad-contents-write`/`job-contents-write`,
+`broad-pull-requests-write`/`job-pull-requests-write`, and
+`broad-write-all`/`job-write-all`. Read-only grants such as
+`permissions: read-all` or `contents: read` stay clean.
+
 ## Install
 
 ActionDeck is distributed as a package tarball attached to each
