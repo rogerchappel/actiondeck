@@ -30,6 +30,24 @@ export function reviewWorkflow(workflow: Omit<WorkflowSummary, "reviewItems">): 
         message: "workflow grants contents: write at top level."
       });
     }
+
+    if (scope === "all" && value === "write-all") {
+      items.push({
+        code: "broad-write-all",
+        severity: "warning",
+        workflowPath: workflow.path,
+        message: "workflow grants permissions: write-all at top level."
+      });
+    }
+
+    if (scope === "pull-requests" && value === "write") {
+      items.push({
+        code: "broad-pull-requests-write",
+        severity: "warning",
+        workflowPath: workflow.path,
+        message: "workflow grants pull-requests: write at top level."
+      });
+    }
   }
 
   items.push(...reviewJobs(workflow));
@@ -78,6 +96,26 @@ function reviewJobs(workflow: Omit<WorkflowSummary, "reviewItems">): ReviewItem[
         workflowPath: workflow.path,
         jobId: job.id,
         message: `job ${job.id} grants contents: write.`
+      });
+    }
+
+    if (job.permissions.scopes.all === "write-all") {
+      items.push({
+        code: "job-write-all",
+        severity: "warning",
+        workflowPath: workflow.path,
+        jobId: job.id,
+        message: `job ${job.id} grants permissions: write-all.`
+      });
+    }
+
+    if (job.permissions.scopes["pull-requests"] === "write") {
+      items.push({
+        code: "job-pull-requests-write",
+        severity: "warning",
+        workflowPath: workflow.path,
+        jobId: job.id,
+        message: `job ${job.id} grants pull-requests: write.`
       });
     }
 
