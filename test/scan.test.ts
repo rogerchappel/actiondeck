@@ -61,3 +61,24 @@ test("scanWorkflows returns an empty report when no workflow directory exists", 
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("scanWorkflows reports over-granted permission findings from the risky fixture repo", async () => {
+  const root = path.resolve("fixtures/risky-repo");
+  const report = await scanWorkflows(root, { now: new Date("2025-01-01T00:00:00Z") });
+
+  const permissionItems = report.reviewItems.filter(
+    (item) => item.workflowPath.endsWith("over-granted-permissions.yml")
+  );
+  const codes = permissionItems.map((item) => item.code);
+  assert.ok(codes.includes("broad-write-all"), `expected broad-write-all in ${codes.join(", ")}`);
+  assert.ok(codes.includes("job-pull-requests-write"), `expected job-pull-requests-write in ${codes.join(", ")}`);
+  assert.equal(codes.includes("job-write-all"), false);
+  assert.equal(
+    permissionItems.some((item) => item.jobId === "read-only" && item.severity === "warning"),
+    false,
+    "the read-only counter-case job must not raise write findings"
+  );
+  assert.ok(report.reviewPlan.some((step) =>
+    step.action === "approve" && step.itemCodes.includes("broad-write-all")
+  ));
+});

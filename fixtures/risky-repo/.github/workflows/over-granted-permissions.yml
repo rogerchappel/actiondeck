@@ -1,0 +1,27 @@
+name: Over-granted permissions
+on:
+  push:
+    branches: [main]
+
+# Deliberately over-scoped defaults kept for demos: actiondeck should report
+# broad-write-all for this workflow even though every job is pinned.
+permissions: write-all
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@0123456789abcdef0123456789abcdef01234567
+      - name: Comment on the PR
+        run: gh pr comment "$PR_NUMBER" --body "triaged"
+
+  read-only:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@0123456789abcdef0123456789abcdef01234567
