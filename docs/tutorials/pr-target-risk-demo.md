@@ -29,6 +29,11 @@ node dist/src/cli.js explain fixtures/risky-repo/.github/workflows/pr-target.yml
 because it contains a `pull_request_target` trigger and write permissions that
 maintainers commonly want to review closely.
 
+`fixtures/risky-repo/.github/workflows/over-granted-permissions.yml` demonstrates
+the permission findings: workflow-level `permissions: write-all` reports
+`broad-write-all`, the `triage` job reports `job-pull-requests-write`, and the
+`read-only` counter-case job stays clean.
+
 ## One-command demo
 
 ```sh

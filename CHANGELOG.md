@@ -11,6 +11,10 @@ format and uses semantic versioning when versioned releases are published.
 
 - Initial project setup.
 - Review plans that group workflow findings into blocker, approval, and documentation gates.
+- Permission findings for `permissions: write-all` and `pull-requests: write` grants at
+  workflow and job scope (`broad-write-all`, `job-write-all`, `broad-pull-requests-write`,
+  `job-pull-requests-write`), grouped into the maintainer-approval gate; read-only grants
+  such as `permissions: read-all` remain clean.
 - Agent skill guidance for local workflow review and approval boundaries.
 
 ### Changed
