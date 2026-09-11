@@ -123,6 +123,91 @@ test("reviewWorkflow accepts a guarded release job in a broadly triggered workfl
   assert.equal(items.some((item) => item.code === "release-without-tag-guard"), false);
 });
 
+test("reviewWorkflow flags workflow-level write-all permissions", () => {
+  const items = reviewWorkflow(permissionWorkflow({
+    workflowPermissions: { mode: "inherit", scopes: { all: "write-all" } }
+  }));
+
+  const finding = items.find((item) => item.code === "broad-write-all");
+  assert.equal(finding?.severity, "warning");
+  assert.equal(finding?.workflowPath, ".github/workflows/permissions.yml");
+  assert.equal(finding?.message, "workflow grants permissions: write-all at top level.");
+});
+
+test("reviewWorkflow flags job-level write-all permissions", () => {
+  const items = reviewWorkflow(permissionWorkflow({
+    jobPermissions: { mode: "inherit", scopes: { all: "write-all" } }
+  }));
+
+  const finding = items.find((item) => item.code === "job-write-all");
+  assert.equal(finding?.severity, "warning");
+  assert.equal(finding?.jobId, "triage");
+  assert.equal(finding?.message, "job triage grants permissions: write-all.");
+});
+
+test("reviewWorkflow flags pull-requests: write at workflow and job scope", () => {
+  const items = reviewWorkflow(permissionWorkflow({
+    workflowPermissions: { mode: "explicit", scopes: { contents: "read", "pull-requests": "write" } },
+    jobPermissions: { mode: "explicit", scopes: { contents: "read", "pull-requests": "write" } }
+  }));
+
+  const workflowFinding = items.find((item) => item.code === "broad-pull-requests-write");
+  assert.equal(workflowFinding?.severity, "warning");
+  assert.equal(workflowFinding?.jobId, undefined);
+  assert.equal(workflowFinding?.message, "workflow grants pull-requests: write at top level.");
+
+  const jobFinding = items.find((item) => item.code === "job-pull-requests-write");
+  assert.equal(jobFinding?.severity, "warning");
+  assert.equal(jobFinding?.jobId, "triage");
+  assert.equal(jobFinding?.message, "job triage grants pull-requests: write.");
+});
+
+test("reviewWorkflow does not flag read-all or read-only permission scopes", () => {
+  const items = reviewWorkflow(permissionWorkflow({
+    workflowPermissions: { mode: "inherit", scopes: { all: "read-all" } },
+    jobPermissions: { mode: "explicit", scopes: { contents: "read", "pull-requests": "read" } }
+  }));
+
+  const writeCodes = [
+    "broad-write-all",
+    "job-write-all",
+    "broad-pull-requests-write",
+    "job-pull-requests-write",
+    "broad-contents-write",
+    "job-contents-write"
+  ];
+  for (const code of writeCodes) {
+    assert.equal(items.some((item) => item.code === code), false, `unexpected finding for ${code}`);
+  }
+});
+
+type PermissionWorkflowOverrides = {
+  workflowPermissions?: WorkflowSummary["permissions"];
+  jobPermissions?: WorkflowSummary["jobs"][number]["permissions"];
+};
+
+function permissionWorkflow(
+  overrides: PermissionWorkflowOverrides = {}
+): Omit<WorkflowSummary, "reviewItems"> {
+  return {
+    path: ".github/workflows/permissions.yml",
+    name: "Permissions",
+    triggers: [{ name: "push", detail: { branches: ["main"] } }],
+    permissions: overrides.workflowPermissions ?? { mode: "explicit", scopes: { contents: "read" } },
+    jobs: [{
+      id: "triage",
+      runsOn: ["ubuntu-latest"],
+      needs: [],
+      permissions: overrides.jobPermissions ?? { mode: "explicit", scopes: { contents: "read" } },
+      secrets: [],
+      commands: [],
+      uses: []
+    }],
+    secrets: [],
+    commands: []
+  };
+}
+
 function releaseWorkflow(
   triggers: WorkflowSummary["triggers"],
   condition?: string
