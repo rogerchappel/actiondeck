@@ -55,3 +55,24 @@ test("buildReviewPlan keeps blocker codes out of approval gate duplicates", () =
   assert.deepEqual(plan[0].itemCodes, ["floating-action-ref"]);
   assert.deepEqual(plan[1].itemCodes, ["broad-contents-write"]);
 });
+
+test("buildReviewPlan routes the new permission findings into the approval gate", () => {
+  const plan = buildReviewPlan([
+    {
+      code: "broad-write-all",
+      severity: "info",
+      message: "workflow grants permissions: write-all at top level.",
+      workflowPath: ".github/workflows/permissions.yml"
+    },
+    {
+      code: "job-pull-requests-write",
+      severity: "info",
+      message: "job triage grants pull-requests: write.",
+      workflowPath: ".github/workflows/permissions.yml",
+      jobId: "triage"
+    }
+  ]);
+
+  assert.deepEqual(plan.map((step) => step.action), ["approve", "document"]);
+  assert.deepEqual(plan[0].itemCodes, ["broad-write-all", "job-pull-requests-write"]);
+});

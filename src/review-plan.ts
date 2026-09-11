@@ -1,7 +1,16 @@
 import type { ReviewItem, ReviewPlanStep } from "./types.js";
 
 const BLOCKING_CODES = new Set(["pull-request-target"]);
-const APPROVAL_CODES = new Set(["broad-contents-write", "job-contents-write", "release-without-tag-guard", "floating-action-ref"]);
+const APPROVAL_CODES = new Set([
+  "broad-contents-write",
+  "job-contents-write",
+  "broad-write-all",
+  "job-write-all",
+  "broad-pull-requests-write",
+  "job-pull-requests-write",
+  "release-without-tag-guard",
+  "floating-action-ref"
+]);
 
 export function buildReviewPlan(items: ReviewItem[]): ReviewPlanStep[] {
   const steps: ReviewPlanStep[] = [];
